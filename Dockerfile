@@ -5,9 +5,6 @@ FROM duckietown/rpi-duckiebot-base
 LABEL maintainer="Juan Miguel Serrano Rodríguez (juan11iguel@gmail.com)"
  
 #
-# Update the image to the latest packages
-RUN apt-get update && apt-get upgrade -y
-
 # Copy seed file to calibrations folder 
 COPY ~/duckietown_clase_practica/duckiebot_random_seed.yaml in /data/config/calibrations/
 
