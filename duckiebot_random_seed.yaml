@@ -1,3 +1,3 @@
 # seed debe ser un número comprendido entre 1 y 7, asignar un seed distinto a cada imagen practica_laboratorio
 # de manera que haya siete imágenes practica_laboratorio_1 cada una con un seed distinto
-seed: 3
+seed: 1

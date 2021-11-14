@@ -3,45 +3,37 @@ Todos los archivos necesarios deben encontrarse en el mismo directorio que este 
 
 ### Generar imagen con archivos modificados
 Primero hay que generar un archivo `Dockerfile` con estructura:
-```docker
+```
 FROM duckietown/rpi-duckiebot-base
- 
 #
 # Identify the maintainer of an image
 LABEL maintainer="Juan Miguel Serrano Rodríguez (juan11iguel@gmail.com)"
- 
 #
-# Update the image to the latest packages
-RUN apt-get update && apt-get upgrade -y
-
 # Copy seed file to calibrations folder 
-COPY ~/duckietown_clase_practica/duckiebot_random_seed.yaml in /data/config/calibrations/
-
+ADD https://github.com/Juasmis/duckietown_clase_practica/blob/main/duckiebot_random_seed.yaml /data/config/calibrations/
+#
 # Copy modified inverse_kinematics_node program
-COPY ~/duckietown_clase_practica/inverse_kinematics_node in /home/software/catkin_ws/src/06-kinematics/dagu_car/src/ 
-
+ADD https://github.com/Juasmis/duckietown_clase_practica/blob/main/inverse_kinematics_node.py /home/software/catkin_ws/src/06-kinematics/dagu_car/src/ 
+#
 # Copy modified lane_controller_node program
-COPY ~/duckietown_clase_practica/lane_controller_node in /home/software/catkin_ws/src/10-lane-control/lane_control/scripts/
+ADD https://github.com/Juasmis/duckietown_clase_practica/blob/main/lane_controller_node.py /home/software/catkin_ws/src/10-lane-control/lane_control/scripts/
 ```
 
 Y construir imagen con:
 ```shell
-docker build https://github.com/Juasmis/duckietown_clase_practica.git#main
-```
-Commit:
-```shell
-docker commit example_app example_image2:latest
+docker build -t imagen_prueba https://github.com/Juasmis/duckietown_clase_practica.git#main
 ```
 
 Sincronizar en [dockerHub](https://hub.docker.com/):
 ```shell
 docker login
 ```
+(Si no se está ya logeado)
 ```shell
-docker tag example_image:latest gauravvv/example_image:latest
+docker tag imagen_prueba patomareao/duckietown_ual:practicaLab_seed3
 ```
 ```shell
-docker push gauravvv/example_image:latest
+docker push patomareao/duckietown_ual:practicaLab_seed3
 ```
 ### Generar contenedor a partir de imagen modificada
 Descargar imagen modificada en RPi con:
