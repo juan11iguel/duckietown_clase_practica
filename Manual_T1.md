@@ -30,6 +30,7 @@ Después en una terminal en el ordenador de sobremesa se abre el mando, para ell
 ```bash
 dts duckiebot keyboard_control duckiebotX
 ```
+
 Resultado esperado:
 ![[Pasted image 20211114155437.png | 200]]
 \*Si esto no funciona consultar [[#Forma alternativa de generar mando]].
@@ -49,12 +50,12 @@ Una vez encontrados valores que generan un desempeño satisfactorio guardar con:
 rosservice call /duckiebotX/inverse_kinematics_node/save_calibration
 ```
 
-Resultado esperado:
+*Resultado esperado*: un duckiebot que sigue una trayectoria recta cuando sólo se pulsa el botón de avanzar en el mando, y que manualmente se pueden seguir las curvas sin derrapes o pérdidas de control:
 ![[tarea11_bien.gif]]
 <!-- Resultado esperado: gif del duckiebot circulando correctamente por la ciudad-->
 
 ### Tarea 2.2 - Controlador
-El otro grupo de parámetros son los referentes al controlador implementado para mantener el robot dentro del carril. Se trata de un controlador PI (**P**roporcional - **I**ntegral).
+El otro grupo de parámetros son los referentes al controlador implementado para mantener el robot dentro del carril. Hay implementados dos controladores que forman de manera conjunta, uno que controla la posición dentro del carril y otro que controla el ángulo del *duckiebot*. En este caso se intentará ajustar el control desplazamiento dentro del carril. Se trata de un controlador PI (**P**roporcional - **I**ntegral).
 ![[Pasted image 20211113191100.png]]
 Por lo tanto los parámetros son la ganancia proporcional e integral:
 - Ganancia proporcional ($K_p$). La parte proporcional de la acción de control se calcula como el producto entre el error (diferencia entre salida actual y salida deseada) y la ganancia proporcional: 
@@ -70,9 +71,24 @@ Detener el programa de control manual (ejecutado desde *Portainer*) pulsando `CT
 roslaunch duckietown_demos lane_following.launch veh:=duckiebotX
 ```
 
+Una vez se vea que se está ejecutando (cuando se muestran mensajes repetitivos en la consola), desde el mando pulsar la letra **A** del teclado para activar la circulación en modo autónomo y **S** para volver al modo manual. En función del comportamiento modificar los parámetros del contenedor de manera similar a la anterior, es decir, en una terminal distinta ejecutar:
+```shell
+rosparam set /duckiebotX/lane_controller_node/K_d VALOR
+```
+Para ajustar la ganancia proporcional, y:
+```shell
+rosparam set /duckiebotX/lane_controller_node/K_Id VALOR
+```
+Para la ganancia integral.
+Una forma de determinar si la ganancia integral es lo suficientemente grande, es, si cuando el *duckiebot* se encuentra pisando alguna de las líneas es muy pasivo (tarda mucho en corregir la trayectoria) en volver al centro de carril, entonces hay que aumentar la ganancia. La ganancia proporcional se ve por los cambios inmediatos que hace el *duckiebot* frente a errores, se ve por la intensidad instantánea que hace el vehículo para volver al centro del carril.
+
+*Resultado esperado*: un *duckiebot* que es capaz de navegar satisfactoriamente por la ciudad siguiendo las marcas de la carretera:
+![[tarea12_bien.gif]]
 
 ### Información adicional
-#### Forma alternativa de generar mando
+- Documentación del proyecto: [link](https://docs.duckietown.org/DT19/opmanual_duckiebot/out/index.html)
+- Repositorio en GitHub de práctica: [link](https://github.com/Juasmis/duckietown_clase_practica)
+##### Forma alternativa de generar mando
 Desde una terminal cambiar al directorio raíz donde están todos los programas del *duckiebot* clonados en el ordenador de sobremesa y ejecutar la instrucción `make`:
 ```bash
 cd Software

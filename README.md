@@ -42,24 +42,12 @@ docker -H DUCKIEBOT_NAME.local pull duckietown_ual/clase_practica_X
 ```
 (X del 1 al 7)
 
-Generar contenedor con parámetros adecuados con (esto todavía lo tengo que comprobar mirando `/var/local/DT18_05_duckiebot_base.yaml`).
-Hay que generar un archivo (`practica.yaml`) con esta estructura (de nuevo, mirar `duckiebot_base.yaml`):
-```yaml
-version: '3'
-services:
+o directamente con:
+```docker
+docker -H hostname.local run -it --net host --memory="800m" --memory-swap="1.8g" --name clase_practica_1 patomareao/duckietown_ual:practicaLab_seed1
+```
+Visto en documentación [versión 2018](https://docs.duckietown.org/DT18/opmanual_duckiebot/out/demo_lane_following.html).
 
-  portainer:
-    image: portainer/portainer:linux-arm
-    command: ["--host=unix:///var/run/docker.sock", "--no-auth"]
-    restart: always
-    network_mode: "host"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-```
-Y después generar el contendor con:
-```bash
-docker-compose -H DUCKIEBOT_NAME.local -f practica.yaml up
-```
 ### Modificaciones a programas para práctica
 Común para ambas tareas:
 - Archivo `duckiebot_random_seed.yaml`  en `/data/config/calibrations/` con contenido:
