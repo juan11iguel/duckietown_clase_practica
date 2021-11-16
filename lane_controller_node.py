@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf_8 -*-
 import math
 import time
 import numpy as np

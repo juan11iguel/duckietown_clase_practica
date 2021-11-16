@@ -30,7 +30,12 @@ A continuación, a través de la interfaz gráfica de *Docker* (*Portainer*), se
 ![[fig portainer.png]]
 Debe haber un contenedor llamado `practica_laboratorio`, se inicia y accede a él pulsando sobre el icono: `>_`.
 
-Si no se encuentra disponible, iniciarlo con:
+Si no se encuentra disponible, primero descargar la última versión de la imagen:
+```docker
+docker -H duckiebotX.local pull patomareao/duckietown_ual:practicaLab_seed5
+```
+
+Posteriormente iniciarlo con:
 ```docker
 docker -H duckiebot1.local run -it --net host --memory="800m" --memory-swap="2.8g" --privileged --name clase_practica_1 -t -i patomareao/duckietown_ual:practicaLab_seed5
 ```
@@ -50,10 +55,10 @@ Resultado esperado:
 
 Para configurar los parámetros se abre en una nueva ventana del navegador el contenedor `practica_laboratorio` y se ejecutan las siguientes instrucciones:
 ```bash
-rosservice call /duckiebotX/inverse_kinematics_node/set_gain VALOR
+rosservice call /duckiebotX/inverse_kinematics_node/set_gain -- VALOR
 ```
 ```bash
-rosservice call /duckiebotX/inverse_kinematics_node/set_trim VALOR
+rosservice call /duckiebotX/inverse_kinematics_node/set_trim -- VALOR
 ```
 
 Donde con `set_gain` se especifica la ganancia y con `set_trim` el desvío. Ir sustituyendo `VALOR` por los distintos valores de prueba comprendidos entre 0 y 10 comprobando el desempeño moviendo el *duckiebot* por la ciudad.
@@ -86,11 +91,11 @@ roslaunch duckietown_demos lane_following.launch veh:=duckiebotX
 
 Una vez se vea que se está ejecutando (cuando se muestran mensajes repetitivos en la consola), desde el mando pulsar la letra **A** del teclado para activar la circulación en modo autónomo y **S** para volver al modo manual. En función del comportamiento modificar los parámetros del contenedor de manera similar a la anterior, es decir, en una terminal distinta ejecutar:
 ```shell
-rosparam set /duckiebotX/lane_controller_node/K_d VALOR
+rosparam set /duckiebotX/lane_controller_node/k_d -- VALOR
 ```
 Para ajustar la ganancia proporcional, y:
 ```shell
-rosparam set /duckiebotX/lane_controller_node/K_Id VALOR
+rosparam set /duckiebotX/lane_controller_node/k_Id -- VALOR
 ```
 Para la ganancia integral.
 Una forma de determinar si la ganancia integral es lo suficientemente grande, es, si cuando el *duckiebot* se encuentra pisando alguna de las líneas es muy pasivo (tarda mucho en corregir la trayectoria) en volver al centro de carril, entonces hay que aumentar la ganancia. La ganancia proporcional se ve por los cambios inmediatos que hace el *duckiebot* frente a errores, se ve por la intensidad instantánea que hace el vehículo para volver al centro del carril.
@@ -113,3 +118,18 @@ make virjoy-duckiebotX
 
 Resultado esperado:
 ![[Pasted image 20211114155437.png | 200]]
+
+##### Comando para meterse en un contenedor ya en funcionamiento y ver mensajes
+```docker
+docker -H duckiebotX.local attach clase_practica2
+```
+
+##### Iniciar nueva terminal en contenedor en ejecución
+```docker
+docker -H duckiebotX.local exec -it clase_practica2 bash
+```
+
+##### Ver valor actual de parámetros
+```shell
+rosparam get /direccion/al/nodo
+```

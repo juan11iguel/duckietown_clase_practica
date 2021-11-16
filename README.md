@@ -14,38 +14,48 @@ FROM duckietown/rpi-duckiebot-base:master19
 
 # Install all the required dependencies
 # This part is taken from "Breandan Considine breandan.considine@umontreal.ca" Dockerfile
-RUN [ "cross-build-start" ]
+# RUN [ "cross-build-start" ]
 COPY requirements.txt /requirements.txt
 # otherwise installation of Picamera fails https://github.com/resin-io-projects/resin-rpi-python-picamera/issues/8
 ENV READTHEDOCS True
 RUN pip install -r /requirements.txt
+RUN bash -c "source /home/software/docker/env.sh && python -c 'import duckietown_utils'"
+
 # Only need to install the dependencies, leave building the ROS workspace for now
 #RUN mkdir /home/software
 #COPY . /home/software/
 #ENV ROS_LANG_DISABLE=gennodejs:geneus:genlisp
 #RUN /bin/bash -c "cd /home/software/ && source /opt/ros/kinetic/setup.bash && catkin_make -j -C catkin_ws/"
 #RUN echo "source /home/software/docker/env.sh" >> ~/.bashrc
+# RUN [ "cross-build-end" ]
 
 # Identify the maintainer of an image
 LABEL maintainer="Juan Miguel Serrano Rodríguez (juan11iguel@gmail.com)"
 
 # Copy seed file to calibrations folder 
-ADD https://github.com/Juasmis/duckietown_clase_practica/blob/main/duckiebot_random_seed.yaml /data/config/calibrations/
+COPY duckiebot_random_seed.yaml /data/config/calibrations/
 
 # Copy modified inverse_kinematics_node program
-ADD https://github.com/Juasmis/duckietown_clase_practica/blob/main/inverse_kinematics_node.py /home/software/catkin_ws/src/06-kinematics/dagu_car/src/ 
+RUN rm /home/software/catkin_ws/src/06-kinematics/dagu_car/src/inverse_kinematics_node.py
+COPY inverse_kinematics_node.py /home/software/catkin_ws/src/06-kinematics/dagu_car/src/
 
 # Copy modified lane_controller_node program
-ADD https://github.com/Juasmis/duckietown_clase_practica/blob/main/lane_controller_node.py /home/software/catkin_ws/src/10-lane-control/lane_control/scripts/
+RUN rm /home/software/catkin_ws/src/10-lane-control/lane_control/scripts/lane_controller_node.py
+COPY lane_controller_node.py /home/software/catkin_ws/src/10-lane-control/lane_control/scripts/
 
-# Upgrade pip
-FROM python:2.7.13
-RUN pip install --upgrade pip
+# # Upgrade pip
+# FROM python:2.7.13
+# RUN pip install --upgrade pip
 
 # Update and install some packages
-RUN apt-get update && apt-get upgrade -y
-RUN apt-get install nano
-RUN apt-get install curl
+ARG CACHEBUST=1 
+RUN apt-get update
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+# RUN sudo dpkg --configure -a
+RUN sudo apt-get install -y -q
+RUN apt-get install dialog apt-utils -y
+RUN apt-get install nano -y
+RUN apt-get install curl -y
 RUN curl https://getmic.ro | bash
 ```
 
@@ -108,42 +118,47 @@ seed: 3
 Modificación de `inverse_kinematics_node.py`
 Aunque se manipulen los valores del archivo de calibración de cinemática inversa  `duckiebot.yaml`, es fácil darse cuenta de que los valores adecuados van a ser 1 para *gain* y 0 o ligeramente distinto para `trim`. Por ello en el *script* `inverse_kinematic_node.py` se introduce la siguiente modificación (línea ~190):
 ```python
+import yaml
+import time
+import os.path
+from duckietown_utils import get_duckiefleet_root
+import random
+									.
+									.
+									.
 # adjusting k by gain and trim
 # Modificado para que el valor adecuado no sea el valor por defecto 
 # de gain = 1 y trim = 0 
-file_name = get_duckiefleet_root() + '/calibrations/kinematics/' + 'duckiebot_random_seed' + ".yaml"
+file_name = get_duckiefleet_root() + '/calibrations/' + 'duckiebot_random_seed' + ".yaml"
 
 # Open configuration
 with open(file_name, 'r') as archivo:
 	config = yaml.safe_load(archivo)
 
-seed(config['seed'])
+random.seed(config['seed'])
 
-value = random()
-min = -5; max = 5
-offset_trim = min + (value * (max - min))
+opciones = [-15, -12, -10, -8, 8, 10, 12, 15]
+offset_introducido = random.choice(opciones)
+# offset_introducido = minimo + (value * (maximo - minimo))
 
-value = random()
-min = 0.3; max = 5
-offset_gain = min + (value * (max - min))
-
-k_r_inv = (self.gain+offset_gain + self.trim+offset_trim) / k_r
-k_l_inv = (self.gain+offset_gain - self.trim+offset_trim) / k_l
+# assuming same motor constants k for both motors
+k_r = self.k + offset_introducido
+k_l = self.k - offset_introducido
 ```
 Que provoca que en base a la semilla del archivo de configuración se genere un offset aleatorio a ambos parámetros único para cada imagen.
 
 #### Tarea 1.2 (controlador)
 Siguiendo la misma estrategia anterior se modifica la ganancia proporcional e integral del controlador para controlar el desplazamiento respecto al centro del carril aplicando un offset a a las ganancias en base a un número aleatorio:
 ```python
-# Modificado por JM
 import yaml
 import os
-from random import seed, random
+import random
 from duckietown_utils import get_duckiefleet_root
 
-#...
+										.
+										.
+										.
 
-# linea 150~
 # Ganancia proporcional e integral del control de desplazamiento respecto a centro de carril
 self.k_d = self.setupParameter("~k_d",k_d_fallback)             # P gain for d
 self.k_Id = self.setupParameter("~k_Id", k_Id_fallback)         # gain for integrator of d
@@ -154,18 +169,19 @@ file_name = get_duckiefleet_root() + '/calibrations/' + 'duckiebot_random_seed' 
 with open(file_name, 'r') as archivo:
 	config = yaml.safe_load(archivo)
 
-seed(config['seed'])
+random.seed(config['seed'])
 
-value = random()
-min = -2; max = 10
-offset_Kp = min + (value * (max - min))
+opciones = [-5, -6, -7, -4, 2, 3, 3.4]
+offset_Kp = random.choice(opciones)
 
-value = random()
-min = 0; max = 10
-offset_Ki = min + (value * (max - min))
+opciones = [-0.9, -0.5, 5, 6, 7, 10]
+offset_Ki = random.choice(opciones)
+# offset_Kp = min + (value[0] * (max - min))
+
+# min = 0; max = 10
+# offset_Ki = min + (value[1] * (max - min))
 
 self.k_d  = self.k_d  + offset_Kp
 self.k_Id = self.k_Id + offset_Ki
-
 ```
 
