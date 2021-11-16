@@ -86,7 +86,7 @@ Con buildx no es necesario, directamente se sube.
 ### Generar contenedor a partir de imagen modificada
 Descargar imagen modificada en RPi con:
 ```bash
-docker -H DUCKIEBOT_NAME.local pull duckietown_ual/clase_practica_X
+docker -H DUCKIEBOT_NAME.local pull patomareao/duckietown_ual:practicaLab_seed5
 ```
 
 o directamente con:

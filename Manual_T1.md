@@ -20,6 +20,8 @@ Para ello se ejecutará el programa que permite el control manual del vehículo,
 #### Pasos a seguir
 El primer paso es encender el robot conectando los dos cables a la batería. Automáticamente se encenderán las luces, si no es así pulsar el botón en el lateral de la batería. Tras un tiempo o cuando se apaguen las luces del robot probar si hay comunicación con la *Raspberry* haciendo: `ping duckiebotX.local`. Si no funciona introducir directamente la dirección IP en lugar del nombre de *host*.
 
+**NOTA:** Sustituir en todos los comandos donde se indica `duckiebotX`, la X por el número del *duckiebot* usado.
+
 **NOTA:** Si no funciona así, hay que hacerlo introduciendo la dirección IP que se mostrará en clase, y además añadir una nueva entrada en el archivo `/etc/hosts` como se muestra:
 ![[Pasted image 20211116180630.png]]
 Pulsar CTRL+X para salir y confirmar para guardar.
@@ -33,7 +35,7 @@ Si no se encuentra disponible, iniciarlo con:
 docker -H duckiebot1.local run -it --net host --memory="800m" --memory-swap="2.8g" --privileged --name clase_practica_1 -t -i patomareao/duckietown_ual:practicaLab_seed5
 ```
 
-Este contenedor se ha credo a partir de una imagen que contiene todos los programas disponibles para un *duckiebot* (control manual, seguidor de líneas, navegación indefinida, etc). Estos son *scripts* programados en *Python* que se ejecutan mediante el Sistema Operativo para Robots (ROS, *Robot Operating System)*. El programa de interés para esta tarea es el del control manual, para ejecutarlo se introduce (sustituir `duckiebotX` por el nombre del *duckiebot* usado):
+Este contenedor se ha credo a partir de una imagen que contiene todos los programas disponibles para un *duckiebot* (control manual, seguidor de líneas, navegación indefinida, etc). Estos son *scripts* programados en *Python* que se ejecutan mediante el Sistema Operativo para Robots (ROS, *Robot Operating System)*. El programa de interés para esta tarea es el del control manual, para ejecutarlo se introduce:
 ```bash
 roslaunch duckietown joystick.launch veh:=duckiebotX
 ```
