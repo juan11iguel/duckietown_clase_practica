@@ -183,11 +183,6 @@ class InverseKinematicsNode(object):
         if not self.actuator_limits_received:
             self.pub_actuator_limits.publish(self.msg_actuator_limits)
 
-        # assuming same motor constants k for both motors
-        k_r = self.k
-        k_l = self.k
-
-        # adjusting k by gain and trim
         # Modificado para que el valor adecuado no sea el valor por defecto 
         # de gain = 1 y trim = 0 
         file_name = get_duckiefleet_root() + '/calibrations/' + 'duckiebot_random_seed' + ".yaml"
@@ -199,15 +194,15 @@ class InverseKinematicsNode(object):
         seed(config['seed'])
 
         value = random()
-        min = -5; max = 5
-        offset_trim = min + (value * (max - min))
+        minimo = 0; maximo = 5
+        offset_introducido = minimo + (value * (maximo - minimo))
 
-        value = random()
-        min = 0.3; max = 5
-        offset_gain = min + (value * (max - min))
+        # assuming same motor constants k for both motors
+        k_r = self.k + offset_introducido
+        k_l = self.k - offset_introducido
 
-        k_r_inv = (self.gain+offset_gain + self.trim+offset_trim) / k_r
-        k_l_inv = (self.gain+offset_gain - self.trim+offset_trim) / k_l
+        k_r_inv = (self.gain + self.trim) / k_r
+        k_l_inv = (self.gain - self.trim) / k_l
 
         omega_r = (msg_car_cmd.v + 0.5 * msg_car_cmd.omega * self.baseline) / self.radius
         omega_l = (msg_car_cmd.v - 0.5 * msg_car_cmd.omega * self.baseline) / self.radius
