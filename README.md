@@ -91,7 +91,7 @@ docker -H DUCKIEBOT_NAME.local pull duckietown_ual/clase_practica_X
 
 o directamente con:
 ```docker
-docker -H duckiebot1.local run -it --net host --memory="800m" --memory-swap="2.8g" --privileged --name clase_practica_1 -a -t -i -e "DUCKIEBOT_IP=192.168.226.182" patomareao/duckietown_ual:practicaLab_seed5
+docker -H duckiebot1.local run -it --net host --memory="800m" --memory-swap="2.8g" --privileged --name clase_practica_1 -t -i patomareao/duckietown_ual:practicaLab_seed5
 ```
 Visto en documentación [versión 2018](https://docs.duckietown.org/DT18/opmanual_duckiebot/out/demo_lane_following.html).
 
