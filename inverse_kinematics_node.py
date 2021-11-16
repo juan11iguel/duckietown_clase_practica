@@ -8,7 +8,7 @@ import yaml
 import time
 import os.path
 from duckietown_utils import get_duckiefleet_root
-from random import seed, randint
+from random import seed, random
 
 # Inverse Kinematics Node
 # Author: Robert Katzschmann, Shih-Yuan Liu
@@ -193,9 +193,9 @@ class InverseKinematicsNode(object):
         
         seed(config['seed'])
 
-        value = random()
-        minimo = 0; maximo = 5
-        offset_introducido = minimo + (value * (maximo - minimo))
+        opciones = [-15, -12, -10, -8, 8, 10, 12, 15]
+        offset_introducido = random.choice(opciones)
+        # offset_introducido = minimo + (value * (maximo - minimo))
 
         # assuming same motor constants k for both motors
         k_r = self.k + offset_introducido

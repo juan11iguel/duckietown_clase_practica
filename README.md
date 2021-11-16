@@ -1,3 +1,8 @@
+- Redactar manual para Pablo (inicialización paso a paso y descarga de imagen para práctica, así como ejecución de contenedor)
+- Generar imagen para cada semilla, que el número aleatorio se eliga de una lista de unos 10 posibles valores.
+- Transparencias para la clase
+- Comprobar los cambios en el controlador de seguimiento de línea
+
 # Manual para preparar clase práctica
 Todos los archivos necesarios deben encontrarse en el mismo directorio que este manual.
 

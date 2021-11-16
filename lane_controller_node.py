@@ -167,16 +167,15 @@ class lane_controller(object):
         
         seed(config['seed'])
 
-        value = random()
-        min = -2; max = 10
-        offset_Kp = min + (value * (max - min))
+        opciones = [-5, -4, -3, -2, 2, 3, 4, 8]
+        offset = random.sample(opciones, 2)
+        # offset_Kp = min + (value[0] * (max - min))
 
-        value = random()
-        min = 0; max = 10
-        offset_Ki = min + (value * (max - min))
+        # min = 0; max = 10
+        # offset_Ki = min + (value[1] * (max - min))
 
-        self.k_d  = self.k_d  + offset_Kp
-        self.k_Id = self.k_Id + offset_Ki
+        self.k_d  = self.k_d  + offset[0]
+        self.k_Id = self.k_Id + offset[1]
 
         #TODO: Feedforward was not working, go away with this error source! (Julien)
         self.use_feedforward_part = self.setupParameter("~use_feedforward_part",use_feedforward_part_fallback)
