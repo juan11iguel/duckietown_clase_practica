@@ -37,8 +37,10 @@ COPY lane_controller_node.py /home/software/catkin_ws/src/10-lane-control/lane_c
 # RUN pip install --upgrade pip
 
 # Update and install some packages
+ARG CACHEBUST=1 
 RUN apt-get update
-RUN sudo dpkg --configure -a
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+# RUN sudo dpkg --configure -a
 RUN sudo apt-get install -y -q
 RUN apt-get install dialog apt-utils -y
 RUN apt-get install nano -y

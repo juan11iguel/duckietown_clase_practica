@@ -67,6 +67,8 @@ Construir imagen:
 ```
 Se especifica la arquitectura que es *arm64* para la RPi, con *buildx* es mucho más rápido.
 
+**NOTA**: Si de un día para otro da error, volver a paso de construir imagen ARM y ejecutar de nuevo.
+
 Sincronizar en [dockerHub](https://hub.docker.com/) (si no se está ya logeado):
 ```shell
 docker login

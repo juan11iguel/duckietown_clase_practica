@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf_8 -*-
 import rospy
 from duckietown_msgs.msg import WheelsCmdStamped, Twist2DStamped, BoolStamped
 from duckietown_msgs.srv import SetValueRequest, SetValueResponse, SetValue
@@ -8,7 +9,7 @@ import yaml
 import time
 import os.path
 from duckietown_utils import get_duckiefleet_root
-from random import seed, random
+import random
 
 # Inverse Kinematics Node
 # Author: Robert Katzschmann, Shih-Yuan Liu
@@ -191,7 +192,7 @@ class InverseKinematicsNode(object):
         with open(file_name, 'r') as archivo:
             config = yaml.safe_load(archivo)
         
-        seed(config['seed'])
+        random.seed(config['seed'])
 
         opciones = [-15, -12, -10, -8, 8, 10, 12, 15]
         offset_introducido = random.choice(opciones)

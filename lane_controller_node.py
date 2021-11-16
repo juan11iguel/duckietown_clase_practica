@@ -10,7 +10,7 @@ import numpy as np
 # Modificado por JM
 import yaml
 import os
-from random import seed, random
+import random
 from duckietown_utils import get_duckiefleet_root
 
 class lane_controller(object):
@@ -165,17 +165,20 @@ class lane_controller(object):
         with open(file_name, 'r') as archivo:
             config = yaml.safe_load(archivo)
         
-        seed(config['seed'])
+        random.seed(config['seed'])
 
-        opciones = [-5, -4, -3, -2, 2, 3, 4, 8]
-        offset = random.sample(opciones, 2)
+        opciones = [-5, -6, -7, -4, 2, 3, 3.4]
+        offset_Kp = random.choice(opciones)
+
+        opciones = [-0.9, -0.5, 5, 6, 7, 10]
+        offset_Ki = random.choice(opciones)
         # offset_Kp = min + (value[0] * (max - min))
 
         # min = 0; max = 10
         # offset_Ki = min + (value[1] * (max - min))
 
-        self.k_d  = self.k_d  + offset[0]
-        self.k_Id = self.k_Id + offset[1]
+        self.k_d  = self.k_d  + offset_Kp
+        self.k_Id = self.k_Id + offset_Ki
 
         #TODO: Feedforward was not working, go away with this error source! (Julien)
         self.use_feedforward_part = self.setupParameter("~use_feedforward_part",use_feedforward_part_fallback)
