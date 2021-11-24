@@ -2,7 +2,7 @@
 
 ### Materiales
 Cada pareja de alumnos tendrá asignado un *duckiebot* y un equipo con el *software* necesario para interactuar con él.
-![[fig duckiebot_caja.jpg]]
+![[fig_duckiebot_caja.jpg]]
 
 ### Tarea 1.1 - Cinemática
 La idea es en primer lugar ajustar los parámetros referentes a la cinemática del robot, es decir, a cómo se mueve. En concreto son:
@@ -23,11 +23,11 @@ El primer paso es encender el robot conectando los dos cables a la batería. Aut
 **NOTA:** Sustituir en todos los comandos donde se indica `duckiebotX`, la X por el número del *duckiebot* usado.
 
 **NOTA:** Si no funciona así, hay que hacerlo introduciendo la dirección IP que se mostrará en clase, y además añadir una nueva entrada en el archivo `/etc/hosts` como se muestra:
-![[Pasted image 20211116180630.png]]
+![[Pasted_image_20211116180630.png]]
 Pulsar CTRL+X para salir y confirmar para guardar.
 
 A continuación, a través de la interfaz gráfica de *Docker* (*Portainer*), se pueden acceder a los distintos contenedores previamente creados (en un navegador en la barra de búsqueda introducir `duckiebotX.local:9000`):
-![[fig portainer.png]]
+![[fig_portainer.png]]
 Debe haber un contenedor llamado `practica_laboratorio`, se inicia y accede a él pulsando sobre el icono: `>_`.
 
 Si no se encuentra disponible, primero descargar la última versión de la imagen:
@@ -50,7 +50,7 @@ dts duckiebot keyboard_control duckiebotX
 ```
 
 Resultado esperado:
-![[Pasted image 20211114155437.png | 200]]
+![[Pasted_image_20211114155437.png | 200]]
 \*Si esto no funciona consultar [[#Forma alternativa de generar mando]].
 
 Para configurar los parámetros se abre en una nueva ventana del navegador el contenedor `practica_laboratorio` y se ejecutan las siguientes instrucciones:
@@ -74,14 +74,14 @@ rosservice call /duckiebotX/inverse_kinematics_node/save_calibration
 
 ### Tarea 2.2 - Controlador
 El otro grupo de parámetros son los referentes al controlador implementado para mantener el robot dentro del carril. Hay implementados dos controladores que forman de manera conjunta, uno que controla la posición dentro del carril y otro que controla el ángulo del *duckiebot*. En este caso se intentará ajustar el control desplazamiento dentro del carril. Se trata de un controlador PI (**P**roporcional - **I**ntegral).
-![[Pasted image 20211113191100.png]]
+![[Pasted_image_20211113191100.png]]
 Por lo tanto los parámetros son la ganancia proporcional e integral:
 - Ganancia proporcional ($K_p$). La parte proporcional de la acción de control se calcula como el producto entre el error (diferencia entre salida actual y salida deseada) y la ganancia proporcional: 
 	$$P = K_p·e(t)$$
 - Ganancia integral ($K_i$). La parte integral de la acción de control se calcula como la integral del error en el tiempo. El resultado de esto es multiplicado por la ganancia integral.
 	$$I = K_i \int_{0}^{t}{e(t) \,dt}$$
 La señal de control es la suma de ambas $U=P+I$
-![[Pasted image 20211113192038.png]]
+![[Pasted_image_20211113192038.png]]
 
 #### Pasos a seguir
 Detener el programa de control manual (ejecutado desde *Portainer*) pulsando `CTRL + C`, y ejecutar el programa de seguimiento de líneas:
@@ -117,7 +117,7 @@ make virjoy-duckiebotX
 ```
 
 Resultado esperado:
-![[Pasted image 20211114155437.png | 200]]
+![[Pasted_image_20211114155437.png | 200]]
 
 ##### Comando para meterse en un contenedor ya en funcionamiento y ver mensajes
 ```docker
