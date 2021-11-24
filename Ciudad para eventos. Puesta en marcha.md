@@ -23,7 +23,7 @@ Un *duckiebot* y un equipo con el *software* necesario para interactuar con él.
 
 #### Pasos a seguir
 El primer paso es encender el robot conectando los dos cables a la batería. Automáticamente se encenderán las luces, si no es así pulsar el botón en el lateral de la batería. Tras un tiempo o cuando se apaguen las luces del robot probar si hay comunicación con la *Raspberry* haciendo: `ping duckiebotX.local`. 
-![](Pasted%20image%2020211124125703.png)
+![](img/Pasted%20image%2020211124125703.png)
 
 Si no funciona introducir directamente la dirección IP en lugar del nombre de *host*.
 
@@ -40,7 +40,7 @@ Hay varias maneras de ejecutar las distintas demos disponibles, gráficamente o 
 
 #### Portainer
 A través de la interfaz gráfica de *Docker* (*Portainer*), se pueden acceder a los distintos contenedores previamente creados (en un navegador en la barra de búsqueda introducir `duckiebotX.local:9000`):
-![Portainer](Pasted%20image%2020211124125801.png)
+![Portainer](img/Pasted%20image%2020211124125801.png)
 
 A continuación buscar el contenedor con el nombre de la demo de interés y pulsar sobre `>_` para inicar su ejecución. Esta aproximación depende de que el contenedor se haya creado previamente.
 
